@@ -177,7 +177,8 @@ int Cat::getId()
 	// wait for the thread to terminate
     if (_catThread != NULL) {
         _catThread->join();
-    } 
+    }
+    delete _catThread;
  }
  
  
@@ -240,7 +241,7 @@ void Cat::catThread (Cat *aCat)
 	     * Check for too many lizards crossing
 	     */
 
-        std::cout << "--" << numCrossingSago2MonkeyGrass + numCrossingMonkeyGrass2Sago <<std::endl;
+        std::cout << "--" << numCrossingSago2MonkeyGrass << "****" << numCrossingMonkeyGrass2Sago <<std::endl;
         std::cout << std::flush;
 		if (numCrossingSago2MonkeyGrass + numCrossingMonkeyGrass2Sago > MAX_LIZARD_CROSSING)
 		{
@@ -319,7 +320,9 @@ int Lizard::getId()
 	 // wait for the thread to terminate
 	if (_aLizard != NULL) {
         _aLizard->join();
-    } 
+    }
+
+    delete _aLizard;
  }
  
 
