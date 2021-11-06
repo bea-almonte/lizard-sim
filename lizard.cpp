@@ -55,7 +55,7 @@ using namespace std;
  * be simulated.  
  * Try 30 for development and 120 for more thorough testing.
  */
-#define WORLDEND             30
+#define WORLDEND             120
 
 /*
  * Number of lizard threads to create
@@ -772,8 +772,7 @@ int main(int argc, char **argv)
 	/*
      * Delete the locks and semaphores
      */
-	 
-	 
+	sem_destroy(&road);
 	 
 	/*
 	 * Delete all cat and lizard objects
