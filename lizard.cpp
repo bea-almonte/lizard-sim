@@ -55,7 +55,7 @@ using namespace std;
  * be simulated.  
  * Try 30 for development and 120 for more thorough testing.
  */
-#define WORLDEND             30
+#define WORLDEND             120
 
 /*
  * Number of lizard threads to create
@@ -97,6 +97,7 @@ using namespace std;
  * Declare global variables here
  */
 sem_t road; // mutex for semaphore -- JB BA
+mutex step; // lock to step in or out -- JB BA
 int lizardsOnRdCnt; // number of lizards on road -- JB BA
 
 /**************************************************/
@@ -407,8 +408,10 @@ void Lizard::crossSago2MonkeyGrass()
 	/*
 	 * One more crossing this way
 	 */
+    step.lock();
 	numCrossingSago2MonkeyGrass++;
-
+    cerr << numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass;
+    step.unlock();
 	/*
      * Check for lizards cross both ways
      */
@@ -429,7 +432,10 @@ void Lizard::crossSago2MonkeyGrass()
     /*
      * That one seems to have made it
      */
+    step.lock(); //JB BA
     numCrossingSago2MonkeyGrass--;
+    cerr << numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass;
+    step.unlock(); 
 }
 
 
@@ -449,7 +455,7 @@ void Lizard::madeIt2MonkeyGrass()
 		cout << flush;
     }
 
-    sem_post(&road);
+    sem_post(&road); // release semaphore
     eat();
 
 
@@ -535,8 +541,10 @@ void Lizard::crossMonkeyGrass2Sago()
     /*
      * One more crossing this way
      */
+    step.lock();
 	numCrossingMonkeyGrass2Sago++;
-
+    cerr << numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass;
+    step.unlock();
   
     /*
      * Check for lizards cross both ways
@@ -557,8 +565,10 @@ void Lizard::crossMonkeyGrass2Sago()
 	/*
      * That one seems to have made it
      */
+    step.lock();
 	numCrossingMonkeyGrass2Sago--;
-    
+    cerr << numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass;
+    step.unlock();
 }
 
 
@@ -610,32 +620,14 @@ void Lizard::lizardThread(Lizard *aLizard)
        * some functions by filling in the code.  Some  
        * are already completed - see the comments.
        */
-		int random = rand() % MAX_LIZARD_SLEEP; // jb ba
+		//int random = rand() % MAX_LIZARD_SLEEP; // jb ba
         //std::cout << random << std::endl;
-		sleep(random); // jb ba
+      	//sleep(random); // jb ba
+        aLizard->sleepNow();//jb ba
+        aLizard->sago2MonkeyGrassIsSafe(); //jb ba
+        aLizard->monkeyGrass2SagoIsSafe(); //jb ba
 
-        aLizard->sago2MonkeyGrassIsSafe(); 
-        aLizard->monkeyGrass2SagoIsSafe();
-
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+		}
 
 }
  
