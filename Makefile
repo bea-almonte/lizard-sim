@@ -8,4 +8,4 @@ lizard: lizard.o
 
 clean:
 	rm -rf *.dSYM
-	$(RM) *.o *.gc*
+	$(RM) *.o *.gc* lizard
