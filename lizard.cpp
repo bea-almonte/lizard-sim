@@ -14,6 +14,8 @@
 /*                                                             */
 /***************************************************************/
 
+/* FILE EDITED BY JOHN BUTLER AND BEA ALMONTE */
+
 #include <iostream>
 
 #include <stdio.h>
@@ -25,7 +27,7 @@
 #include <thread>
 #include <mutex>
 #include <vector>
-#include <semaphore.h> //jb ba
+#include <semaphore.h> // JB BA
 
 
 
@@ -55,7 +57,7 @@ using namespace std;
  * be simulated.  
  * Try 30 for development and 120 for more thorough testing.
  */
-#define WORLDEND             180
+#define WORLDEND             180 // JB BA
 
 /*
  * Number of lizard threads to create
@@ -164,8 +166,9 @@ int Cat::getId()
  void Cat::run() 
  {
 	 // launch the thread to simulate the cat's behavior	 
-	 // JB BA
-    _catThread = new thread ( catThread, this); // calls lizardthread and passes self
+	// calls CAT THREAD and passes self
+    _catThread = new thread ( catThread, this); // JB BA
+    
  }
  
  /**
@@ -176,9 +179,10 @@ int Cat::getId()
  void Cat::wait()
  {
 	// wait for the thread to terminate
-    if (_catThread != NULL) {
-        _catThread->join();
-        delete _catThread;
+    // deletes thread variable after joining -- JB BA
+    if (_catThread != NULL) {   // JB BA
+        _catThread->join();     // JB BA
+        delete _catThread;      // JB BA
     }
     
  }
@@ -195,14 +199,17 @@ int Cat::getId()
 void Cat::sleepNow()
 {
 	int sleepSeconds;
-    string output;
+
+    // combined output string
+    string output;  // JB BA
+
 	sleepSeconds = 1 + (int)(random() / (double)RAND_MAX * MAX_CAT_SLEEP);
 
 	if (debug)
     {
-		
-        output = "[" + to_string(_id) + "] cat sleeping for " + to_string(sleepSeconds) + " seconds\n";
-        cout << output;
+		// changed to have outputs not jumbled
+        output = "[" + to_string(_id) + "] cat sleeping for " + to_string(sleepSeconds) + " seconds\n"; // JB BA
+        cout << output;     // JB BA
 		cout << flush;
     }
 
@@ -210,8 +217,9 @@ void Cat::sleepNow()
 
 	if (debug)
     {
-        output = "[" + to_string(_id) + "] cat awake\n";
-        cout << output;
+        // changed to have outputs not jumbled
+        output = "[" + to_string(_id) + "] cat awake\n";    // JB BA
+        cout << output;     // JB BA
 		cout << flush;
     }
 }
@@ -240,22 +248,18 @@ void Cat::catThread (Cat *aCat)
     {
 		aCat->sleepNow();
 
-
-
 		/*
 	     * Check for too many lizards crossing
 	     */
-
-     /*    std::cout << "--" << numCrossingSago2MonkeyGrass << "****" << numCrossingMonkeyGrass2Sago <<std::endl;
-        std::cout << std::flush; */
-        step.lock();
+        // locks the checking of lizards to one cat
+        step.lock();    // JB BA
 		if (numCrossingSago2MonkeyGrass + numCrossingMonkeyGrass2Sago > MAX_LIZARD_CROSSING)
 		{
 		  cout << "\tThe cats are happy - they have toys.\n";
           std::cout << std::flush;
 		  exit( -1 );
 		}
-        step.unlock();
+        step.unlock();  // JB BA
     }
 }
 
@@ -327,10 +331,9 @@ int Lizard::getId()
 	 // wait for the thread to terminate
 	if (_aLizard != NULL) {
         _aLizard->join();
-        delete _aLizard;
+        // deletes thread variable after joining
+        delete _aLizard;    // JB BA
     }
-
-    
  }
  
 
@@ -346,13 +349,16 @@ int Lizard::getId()
 void Lizard::sleepNow()
 {
 	int sleepSeconds;
-    string output;
+
+    // combined output string
+    string output;  // JB BA
+
 	sleepSeconds = 1 + (int)(random() / (double)RAND_MAX * MAX_LIZARD_SLEEP);
 
 	if (debug)
     {
-      output = "[" + to_string(_id) + "] sleeping for " + to_string(sleepSeconds) + " seconds\n";
-      cout << output;
+      output = "[" + to_string(_id) + "] sleeping for " + to_string(sleepSeconds) + " seconds\n";   // JB BA
+      cout << output;   // JB BA
       cout << flush;
     }
 
@@ -360,8 +366,8 @@ void Lizard::sleepNow()
 
 	if (debug)
     {
-      output = "[" + to_string(_id) + "] awake\n";
-      cout << output;
+      output = "[" + to_string(_id) + "] awake\n";  // JB BA
+      cout << output;   // JB BA
       cout << flush;
     }
 }
@@ -379,27 +385,30 @@ void Lizard::sleepNow()
  */
 void Lizard::sago2MonkeyGrassIsSafe()
 {
-    string output;
-
+    // combined output string
+    string output;  // JB BA
 	if (debug)
     {
-        output = "[" + to_string(_id) + "] checking sago -> monkey grass\n";
-        cout << output;
+        output = "[" + to_string(_id) + "] checking sago -> monkey grass\n";    // JB BA
+        cout << output;     // JB BA
 		cout << flush;
     }
 
-    sem_wait(&road);
+    // uses resource, blocked until a resource is freed
+    sem_wait(&road);    // JB BA
 
 
 	if (debug)
     {
-        output = "[" + to_string(_id) + "] thinks  sago -> monkey grass  is safe\n";
-        cout << output;
+        output = "[" + to_string(_id) + "] thinks  sago -> monkey grass  is safe\n";    // JB BA
+        cout << output;     // JB BA
 		cout << flush;
     }
 
-    crossSago2MonkeyGrass();
-    madeIt2MonkeyGrass();
+    // crossing for number of seconds specified
+    crossSago2MonkeyGrass();    // JB BA
+     // releases semaphore resource then eats
+    madeIt2MonkeyGrass();       // JB BA
 }
 
 
@@ -412,22 +421,22 @@ void Lizard::sago2MonkeyGrassIsSafe()
  */
 void Lizard::crossSago2MonkeyGrass()
 {
-    string output;
-
+    string output;  // JB BA
 	if (debug)
     {
-      output = "[" + to_string(_id) + "] crossing sago -> monkey grass\n";
-      cout << output;
+      output = "[" + to_string(_id) + "] crossing sago -> monkey grass\n";  // JB BA
+      cout << output;   // JB BA
       cout << flush;
     }
 
 	/*
 	 * One more crossing this way
 	 */
-    step.lock();
+    step.lock();    // JB BA
 	numCrossingSago2MonkeyGrass++;
-    cerr << numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass;
-    step.unlock();
+    // used for determining correct number of lizards on roadway JB BA
+    // cerr << numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass; JB BA
+    step.unlock();  // JB BA
 	/*
      * Check for lizards cross both ways
      */
@@ -450,8 +459,9 @@ void Lizard::crossSago2MonkeyGrass()
      */
     step.lock(); //JB BA
     numCrossingSago2MonkeyGrass--;
-    cerr << numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass;
-    step.unlock(); 
+    // used for determining correct number of lizards on roadway JB BA
+    // cerr << numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass; JB BA
+    step.unlock(); // JB BA
 }
 
 
@@ -462,19 +472,20 @@ void Lizard::crossSago2MonkeyGrass()
  */
 void Lizard::madeIt2MonkeyGrass()
 {
-    string output;
+    string output;  // JB BA
 	/*
      * Whew, made it across
      */
 	if (debug)
     {
-        output = "[" + to_string(_id) + "] made the  sago -> monkey grass  crossing\n";
-        cout << output;
+        output = "[" + to_string(_id) + "] made the  sago -> monkey grass  crossing\n"; // JB BA
+        cout << output;     // JB BA
 		cout << flush;
     }
 
-    sem_post(&road); // release semaphore
-    eat();
+    // release resource for other threads
+    sem_post(&road); // JB BA
+    eat();  // eat for some random time
 
 
 }
@@ -488,14 +499,14 @@ void Lizard::madeIt2MonkeyGrass()
 void Lizard::eat()
 {
 	int eatSeconds;
-    string output;
+    string output;  // JB BA
 
 	eatSeconds = 1 + (int)(random() / (double)RAND_MAX * MAX_LIZARD_EAT);
 
 	if (debug)
     {
-        output = "[" + to_string(_id) + "] eating for " + to_string(eatSeconds) + " seconds\n";
-        cout << output;
+        output = "[" + to_string(_id) + "] eating for " + to_string(eatSeconds) + " seconds\n";     // JB BA
+        cout << output;     // JB BA
 		cout << flush;
     }
 
@@ -506,8 +517,8 @@ void Lizard::eat()
 
 	if (debug)
     {
-      output = "[" + to_string(_id) + "] finished eating\n";
-      cout << output;
+      output = "[" + to_string(_id) + "] finished eating\n";    // JB BA
+      cout << output;       // JB BA
       cout << flush;
     }
 }
@@ -518,33 +529,33 @@ void Lizard::eat()
  * grass to the sago.   Should use some synchronization 
  * facilities (lock/semaphore) here.
  *
- * Status: Incomplete - Make changes as you see are necessary. done manybe
+ * Status: Incomplete - Make changes as you see are necessary.
  */
 void Lizard::monkeyGrass2SagoIsSafe()
 {
-    string output;
-
+    string output;  // JB BA
 	if (debug)
     {
-        output = "[" + to_string(_id) + "] checking  monkey grass -> sago\n";
-        cout << output;
-		cout << flush;
-    }
-    sem_wait(&road);
-
-
-    
-
-	if (debug)
-    {
-        output = "[" + to_string(_id) + "] thinks  monkey grass -> sago  is safe\n";
-        cout << output;
+        output = "[" + to_string(_id) + "] checking  monkey grass -> sago\n";   // JB BA
+        cout << output; // JB BA
 		cout << flush;
     }
 
-    crossMonkeyGrass2Sago();
+    // takes semaphore resource, blocks until resource if freed
+    sem_wait(&road);    // JB BA
 
-    madeIt2Sago();
+
+	if (debug)
+    {
+        output = "[" + to_string(_id) + "] thinks  monkey grass -> sago  is safe\n";    // JB BA
+        cout << output;     // JB BA
+		cout << flush;
+    }
+
+    // cross driveway
+    crossMonkeyGrass2Sago();    // JB BA
+    // release semaphore resource, sleep for random seconds
+    madeIt2Sago();  // JB BA
 }
 
 
@@ -557,21 +568,22 @@ void Lizard::monkeyGrass2SagoIsSafe()
  */
 void Lizard::crossMonkeyGrass2Sago()
 {
-    string output = "";
+    string output = "";     // JB BA
 	if (debug)
     {
-        output = "[" + to_string(_id) + "] crossing  monkey grass -> sago\n";
-        cout << output;
+        output = "[" + to_string(_id) + "] crossing  monkey grass -> sago\n";   // JB BA
+        cout << output;     // JB BA
 		cout << flush;
     }
 
     /*
      * One more crossing this way
      */
-    step.lock();
+    step.lock();    // JB BA
 	numCrossingMonkeyGrass2Sago++;
-    cerr << numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass;
-    step.unlock();
+    // used for determining correct number of lizards on roadway JB BA
+    // cerr << numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass; JB BA
+    step.unlock();  // JB BA
   
     /*
      * Check for lizards cross both ways
@@ -592,10 +604,11 @@ void Lizard::crossMonkeyGrass2Sago()
 	/*
      * That one seems to have made it
      */
-    step.lock();
+    step.lock();    // JB BA
 	numCrossingMonkeyGrass2Sago--;
-    cerr << numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass;
-    step.unlock();
+    // used for determining correct number of lizards on roadway JB BA
+    // cerr << numCrossingMonkeyGrass2Sago + numCrossingSago2MonkeyGrass; JB BA
+    step.unlock();  // JB BA
 }
 
 
@@ -607,20 +620,21 @@ void Lizard::crossMonkeyGrass2Sago()
  */
 void Lizard::madeIt2Sago()
 {
-    
 	/*
      * Whew, made it across
      */
-  string output = "";
+  string output = "";   // JB BA
 
 	if (debug)
     {
-		output = "[" + to_string(_id) + "] made the  monkey grass -> sago  crossing\n";
-		cout << output;
+		output = "[" + to_string(_id) + "] made the  monkey grass -> sago  crossing\n"; // JB BA
+		cout << output; // JB BA
 		cout << flush;
     }
-    sem_post(&road);
-    sleepNow();
+
+    // release semaphore for other threads
+    sem_post(&road);    // JB BA
+    sleepNow(); // sleep for some random time
 }
 
 /**
@@ -636,11 +650,11 @@ void Lizard::madeIt2Sago()
   */
 void Lizard::lizardThread(Lizard *aLizard)
 {	
-	string output;
+	string output;  // JB BA
 
 	if (debug)
     {
-      output = "[" + to_string(aLizard->getId()) + "] lizard is alive\n";
+      output = "[" + to_string(aLizard->getId()) + "] lizard is alive\n";   // JB BA
       cout << flush;
     }
 
@@ -656,9 +670,23 @@ void Lizard::lizardThread(Lizard *aLizard)
 		//int random = rand() % MAX_LIZARD_SLEEP; // jb ba
         //std::cout << random << std::endl;
       	//sleep(random); // jb ba
-        aLizard->sleepNow();//jb ba
-        aLizard->sago2MonkeyGrassIsSafe(); //jb ba
-        aLizard->monkeyGrass2SagoIsSafe(); //jb ba
+
+        // sleep for some time
+        aLizard->sleepNow();// JB BA
+        // crossing to monkey grass
+        // 1. checks if safe (not blocked by semaphore)
+        // 2. increments # of lizards on road
+        // 3. cross
+        // 4. release semaphore
+        // 5. eat
+        aLizard->sago2MonkeyGrassIsSafe(); // JB BA
+        // crossing to sago
+        // 1. checks if safe (not blocked by semaphore)
+        // 2. increments # of lizards on road
+        // 3. cross
+        // 4. release semaphore
+        // 5. sleep
+        aLizard->monkeyGrass2SagoIsSafe(); // JB BA
 
 		}
 
@@ -710,7 +738,8 @@ int main(int argc, char **argv)
 	/*
      * Initialize locks and/or semaphores
      */
-    sem_init(&road,0,MAX_LIZARD_CROSSING);
+    // unnamed
+    sem_init(&road,0,MAX_LIZARD_CROSSING);  // JB BA
 
 	/*
      * Create NUM_LIZARDS lizard threads
@@ -725,10 +754,11 @@ int main(int argc, char **argv)
      * Create NUM_CATS cat threads
      */
     // JB BA 
-	  vector<Cat*> allCats;
-	  for (int i = 0; i < NUM_CATS; i++)
+    // create Cat object vector
+	  vector<Cat*> allCats;     // JB BA
+	  for (int i = 0; i < NUM_CATS; i++)    // JB BA
 	  {
-		  allCats.push_back(new Cat(i));
+		  allCats.push_back(new Cat(i));    // JB BA
 	  }
 
 	/*
@@ -739,7 +769,7 @@ int main(int argc, char **argv)
     }
     for (int i = 0; i < NUM_CATS; i++)
 	{
-		  allCats[i]->run();
+		  allCats[i]->run();    // JB BA
 	}
 
 	/*
@@ -758,31 +788,31 @@ int main(int argc, char **argv)
      * Wait until all threads terminate
      */
 
-    std::cout << "Waiting...\n";
-    std::cout << std::flush;
-    for (int i=0; i < NUM_LIZARDS; i++) {
-        allLizards[i]->wait();
+    for (int i=0; i < NUM_LIZARDS; i++)    // JB BA
+    {   
+        allLizards[i]->wait();  // JB BA
     }
-    for (int i = 0; i < NUM_CATS; i++)
+    for (int i = 0; i < NUM_CATS; i++)  // JB BA
 	{
-		  allCats[i]->wait();
+		  allCats[i]->wait();   // JB BA
 	}
 
 
 	/*
      * Delete the locks and semaphores
      */
-	sem_destroy(&road);
+	sem_destroy(&road);     // JB BA
 	 
 	/*
 	 * Delete all cat and lizard objects
 	 */
-    for (int i=0; i < NUM_LIZARDS; i++) {
-        delete allLizards[i];
+    for (int i=0; i < NUM_LIZARDS; i++)     // JB BA
+    {
+        delete allLizards[i];   // JB BA
     }
-    for (int i = 0; i < NUM_CATS; i++)
+    for (int i = 0; i < NUM_CATS; i++)  // JB BA
 	{
-	    delete allCats[i];
+	    delete allCats[i];  // JB BA
 	}
 
 
