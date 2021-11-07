@@ -658,6 +658,11 @@ void Lizard::lizardThread(Lizard *aLizard)
       cout << flush;
     }
 
+    //int random = rand() % MAX_LIZARD_SLEEP; // jb ba
+    //std::cout << random << std::endl;
+    //sleep(random); // jb ba
+    // sleep for some time
+    aLizard->sleepNow();// JB BA
 	while(running)
     {
       /* 
@@ -667,12 +672,9 @@ void Lizard::lizardThread(Lizard *aLizard)
        * some functions by filling in the code.  Some  
        * are already completed - see the comments.
        */
-		//int random = rand() % MAX_LIZARD_SLEEP; // jb ba
-        //std::cout << random << std::endl;
-      	//sleep(random); // jb ba
+		
 
-        // sleep for some time
-        aLizard->sleepNow();// JB BA
+        
         // crossing to monkey grass
         // 1. checks if safe (not blocked by semaphore)
         // 2. increments # of lizards on road
